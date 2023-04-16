@@ -1,0 +1,37 @@
+body {
+  	margin: 0px;
+  	padding: 0px; 
+	background-color: white;
+}
+.headerMain {
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; 
+}
+.headerMain > div > a,span{
+  font-size: 32px;
+  color: black;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.headerMain > a, span {
+  
+  font-size: 32px;
+  color: black;
+  text-decoration: none;
+}
+.form_inner, .post {
+	display: flex;
+  	flex-direction: column;
+  	width: 300px;
+  	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  	border-radius: 10px;
+  	padding: 10px;
+  	margin: 10px;
+  	background-color: white; 
+}
+.products{
+	display: flex;
+  	flex-direction: row;
+  	flex-wrap: wrap;	
+}

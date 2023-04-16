@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>fastapi</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet"  href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+    {% include "header.html" %}
+    <h2>product {{header}}</h2>
+    <p>id:{{id}}</p> 
+    <img src="/static/uploads/{{name_image}}.png" width="130" height="200">
+    <p>описание:{{description}}</p>
+    <p>цена:{{price}}</p>
+    <form action="/bying/{{id}}" method = "POST" enctype="multipart/form-data">  
+                    <div class="bying">
+                       <input type="submit" class="button-68" value="show product" /><br />
+                    </div>
+                </form>   
+</body>
+</html>

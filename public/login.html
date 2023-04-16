@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+<link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">  
+</head>
+
+
+<html>  
+   <body>
+    <div class="login">
+      <form action="/login" method = "POST">
+        <div class="login_form">
+          <h1>Login</h1>
+          
+          <hr>
+        
+          <label for="user"><b>Username</b></label>
+          <input type="text" placeholder="Enter Username" name="Username" id="user" required><br>
+        
+          <label for="password"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" name="Password" id="password" required><br>
+    
+        
+          
+          <button type="submit" class="registerbtn button-68">Register</button>
+        </div>
+      </form>
+    </div>  
+      
+   </body>  
+</html>  

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>fastapi</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet"  href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+    {% include "header.html" %}
+    <h2>Shop on fastapi</h2>
+    <!--
+    <div class="form_inner">  
+         <form action="/" method = "POST" enctype="multipart/form-data">  
+               <div class="textregion">
+                  <textarea name="post" rows="10" cols="30"></textarea><br />
+                  <input type="file" name="file"><br />
+                  <input type = "submit" class="button-68" value="submit" /><br />
+               </div>
+         </form> 
+      </div> -->
+      <div class="products">
+        {% for t in texts %}
+            <div class="post">
+
+                <p>id:{{t.id}}</p>
+                <p>заголовок:{{t.header}}</p>  
+
+                <img src="/static/uploads/{{t.name_image}}.png" width="130" height="200">
+
+                <p>описание:{{t.description}}</p>
+                <p>цена:{{t.price}}</p>
+
+                <form action="/product/{{t.id}}" method = "POST" enctype="multipart/form-data">  
+                    <div class="bying">
+                       <input type="submit" class="button-68" value="show product" /><br />
+                    </div>
+                </form>   
+            </div>
+            
+        {% endfor %}
+      </div>
+</body>
+</html>

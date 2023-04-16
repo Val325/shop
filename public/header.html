@@ -1,0 +1,15 @@
+<div class="headerMain">
+	{% if auth %} 
+	<div class="logout">
+		<a href="/">main page</a>
+		<a href="/admin">admin</a>
+		<span>User: {{IsAuth}}</span>	
+		<a href="/logout">logout</a>
+	</div>
+	{% else %}
+	<div class="authreg">
+		<a href="/login">login</a>
+		<a href="/registration">Registration</a>
+	</div>
+	{% endif %} 
+</div>

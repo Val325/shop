@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>fastapi</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet"  href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+    {% include "header.html" %}
+    <h1>product {{header}} id:{{id}} цена:{{price}}</h1>
+    <h1>Sucessful bying</h1>
+</body>
+</html>
