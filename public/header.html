@@ -1,11 +1,16 @@
 <div class="headerMain">
 	{% if auth %} 
-	<div class="logout">
-		<a href="/">main page</a>
-		<a href="/admin">admin</a>
-		<span>User: {{IsAuth}}</span>	
-		<a href="/logout">logout</a>
+	<div class="headerAuth">
+		<div class="user">
+			<a href="/profile">profile</a>
+			<a href="/">main page</a>
+		</div>
+		<div class="logout">
+			<a href="/admin">admin</a>
+			<a href="/logout">logout</a>
+		</div>	
 	</div>
+	
 	{% else %}
 	<div class="authreg">
 		<a href="/login">login</a>

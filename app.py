@@ -242,7 +242,10 @@ async def login_post(request: Request,
 	print("login")
 	print("Username:", Username)
 	print("Password:", Password)
+
+	expires = timedelta(days=7)
 	response = None
+
 	with Session(autoflush=False, bind=engine) as db:
 		try:
 			userDB = db.query(users).filter(users.user==Username).one_or_none()
@@ -255,8 +258,8 @@ async def login_post(request: Request,
 
 			if IsAuthBool:
 				# Create the tokens and passing to set_access_cookies or set_refresh_cookies
-				access_token = Authorize.create_access_token(subject=data_jwt_save)
-				refresh_token = Authorize.create_refresh_token(subject=data_jwt_save)
+				access_token = Authorize.create_access_token(subject=data_jwt_save,expires_time=expires)
+				refresh_token = Authorize.create_refresh_token(subject=data_jwt_save,expires_time=expires)
 				# Set the JWT cookies in the response
 		
 		
@@ -334,7 +337,9 @@ def product_id_get(request: Request,
 															"description":data_product["description"],
 															"name_image":data_product["name_image"],
 															"path_image":data_product["path_image"],
-															"price":data_product["price"]})
+															"price":data_product["price"],
+															"IsAuth": isAuth['user'],
+															"auth": auth})
 
 @app.post("/product/{id}")
 def product_id_post(request: Request,
@@ -359,7 +364,9 @@ def product_id_post(request: Request,
 															"description":data_product["description"],
 															"name_image":data_product["name_image"],
 															"path_image":data_product["path_image"],
-															"price":data_product["price"]})
+															"price":data_product["price"],
+															"IsAuth": isAuth['user'],
+															"auth": auth})
 
 #
 # bying product
@@ -381,13 +388,18 @@ def bying_id_get(request: Request,
 
 	data_product = return_product_by_id(id)
 	print("product", data_product)
+
+	
+
 	return templates.TemplateResponse("showProduct.html", {"request": request,
 															"id":data_product["id"],
 															"header":data_product["header"],
 															"description":data_product["description"],
 															"name_image":data_product["name_image"],
 															"path_image":data_product["path_image"],
-															"price":data_product["price"]})
+															"price":data_product["price"],
+															"IsAuth": isAuth['user'],
+															"auth": auth})
 
 @app.post("/bying/{id}")
 def bying_id_post(request: Request,
@@ -396,6 +408,7 @@ def bying_id_post(request: Request,
 					Authorize: AuthJWT = Depends()):
 	data_product = return_product_by_id(id)
 	print("product", data_product)
+	
 	try:
 		texts = send_all_goods()
 		auth_jwt(Authorize, access_token_cookie)
@@ -414,14 +427,19 @@ def bying_id_post(request: Request,
 		return RedirectResponse(url="/login")
 
 	
+
 	
+
+
 	return templates.TemplateResponse("bying.html", {"request": request,
 													"id":data_product["id"],
 													"header":data_product["header"],
 													"description":data_product["description"],
 													"name_image":data_product["name_image"],
 													"path_image":data_product["path_image"],
-													"price":data_product["price"]})
+													"price":data_product["price"],
+													"IsAuth": isAuth['user'],
+													"auth": auth})
 
 @app.get("/profile")
 def profile(request: Request, 
@@ -445,4 +463,6 @@ def profile(request: Request,
 														"IsAuth": isAuth['user'],
 														"auth": auth,
 														"user": user.user,
-														"money": user.money})
+														"money": user.money,
+														"IsAuth": isAuth['user'],
+														"auth": auth})

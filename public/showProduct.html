@@ -7,15 +7,29 @@
 </head>
 <body>
     {% include "header.html" %}
-    <h2>product {{header}}</h2>
-    <p>id:{{id}}</p> 
-    <img src="/static/uploads/{{name_image}}.png" width="130" height="200">
-    <p>описание:{{description}}</p>
-    <p>цена:{{price}}</p>
-    <form action="/bying/{{id}}" method = "POST" enctype="multipart/form-data">  
-                    <div class="bying">
-                       <input type="submit" class="button-68" value="show product" /><br />
-                    </div>
-                </form>   
+    <h2 class="headertext">product {{header}}</h2>
+    <div class="product">
+        <div class="mainDescription">
+            <div class="images">
+                <p>id:{{id}}</p> 
+                <img src="/static/uploads/{{name_image}}.png" width="130" height="200">
+            </div>
+            <div>
+                <p>описание:{{description}}</p>
+            </div>
+        </div>
+        <div>
+            
+            <p>цена:{{price}}</p>
+            <form action="/bying/{{id}}" method = "POST" enctype="multipart/form-data">  
+                <div class="bying">
+                   <input type="submit" class="button-28" value="bying" /><br />
+                </div>
+            </form>   
+        </div>
+    </div>
+    
+
+    
 </body>
 </html>
