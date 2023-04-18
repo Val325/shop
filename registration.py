@@ -33,26 +33,27 @@ import main
 templates = Jinja2Templates(directory="public")
 router = APIRouter()
 
-@router.get('/admin', response_class=HTMLResponse)
-async def admin_get(request: Request,
-					access_token_cookie: str | None = Cookie(default=None),
-					Authorize: AuthJWT = Depends()):
+@router.get('/registration', response_class=HTMLResponse)
+async def main(request: Request):
+	return templates.TemplateResponse("registration.html", {"request": request})
 
-	try:
-		texts = send_all_goods()
-		auth_jwt(Authorize, access_token_cookie)
-		isAuth = json.loads(Authorize.get_jwt_subject())
+@router.post('/registration', response_class=HTMLResponse)
+async def login_post(request: Request, 
+						Password = Form(), 
+						Username = Form()):
+	print("Password")
+	print("Username:", Username)
+	print("Password:", Password)
 
-		#If user had admin right?
-		if isAuth['admin_right'] == False:
-			return RedirectResponse(url="/")
+	salt = bcrypt.gensalt()
+	hashed = bcrypt.hashpw(Password.encode('utf-8'), salt).decode('utf8')
 
-		#If user auth?
-		if isAuth:
-			auth = True
-	except:
-		return RedirectResponse(url="/login")
-
-	return templates.TemplateResponse("adminPanel.html", {"request": request, 
-															"IsAuth": isAuth['user'],
-															"auth": auth})
+	print("salt", salt)
+	print("Hashed:", hashed)
+	with Session(autoflush=False, bind=engine) as db:
+		
+		data_user = users(user=Username, password=hashed,money=100)
+		db.add(data_user)     
+		db.commit()     
+		
+	return templates.TemplateResponse("registration.html", {"request": request})

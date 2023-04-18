@@ -25,15 +25,20 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-from DB import engine, products, users
+#from DB import engine, products, users, return_user
 from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, return_user, set_money_user
+from utils import auth_jwt, set_money_user
+
 import main
+import adminPanel
+import productsShop
+import profile
+import registration
 app = FastAPI()
 
 secret_jwt = "4d398bd652db815963be16eb60638b9cc3c70096"
 
-"""
+
 engine = create_engine("postgresql://postgres:Hamachi2002@localhost/fastapiDB")
 class Base(DeclarativeBase): pass
 
@@ -56,10 +61,12 @@ class users(Base):
 
 
 Base.metadata.create_all(bind=engine)
-"""
+
 app.include_router(main.router)
-#app.include_router(users.router)
-#app.include_router(users.router)
+app.include_router(adminPanel.router)
+app.include_router(productsShop.router)
+app.include_router(profile.router)
+app.include_router(registration.router)
 #app.include_router(users.router)
 
 app.mount(
@@ -67,6 +74,7 @@ app.mount(
     StaticFiles(directory=Path(__file__).parent.absolute() / "static"),
     name="static",
 )
+
 
 # in production you can use Settings management
 # from pydantic to get secret key from .env
@@ -91,6 +99,7 @@ def authjwt_exception_handler(request: Request,
         status_code=exc.status_code,
         content={"detail": exc.message}
     )
+
 
 """
 def send_all_goods():
@@ -227,6 +236,7 @@ def get_data(request: Request,
 async def login_get(request: Request):
 	return templates.TemplateResponse("login.html", {"request": request})
 
+"""
 @app.get('/admin', response_class=HTMLResponse)
 async def admin_get(request: Request,
 					access_token_cookie: str | None = Cookie(default=None),
@@ -250,6 +260,8 @@ async def admin_get(request: Request,
 	return templates.TemplateResponse("adminPanel.html", {"request": request, 
 															"IsAuth": isAuth['user'],
 															"auth": auth})
+"""
+
 
 @app.post('/login')
 async def login_post(request: Request, 
@@ -296,6 +308,7 @@ async def login_post(request: Request,
 
 	return templates.TemplateResponse("login.html", {"request": request})
 
+"""
 @app.get('/registration', response_class=HTMLResponse)
 async def main(request: Request):
 	return templates.TemplateResponse("registration.html", {"request": request})
@@ -320,7 +333,7 @@ async def login_post(request: Request,
 		db.commit()     
 		
 	return templates.TemplateResponse("registration.html", {"request": request})
-
+"""
 @app.get('/logout')
 async def logout(response: Response,
 				Authorize: AuthJWT = Depends()):
@@ -331,7 +344,7 @@ async def logout(response: Response,
 #
 # show product
 #
-
+"""
 @app.get("/product/{id}")
 def product_id_get(request: Request,
 					id: int,
@@ -472,7 +485,7 @@ def bying_id_post(request: Request,
 													"IsAuth": isAuth['user'],
 													"auth": auth,
 													"money": user.money})
-
+"""
 @app.get("/profile")
 def profile(request: Request, 
 			access_token_cookie: str | None = Cookie(default=None), 

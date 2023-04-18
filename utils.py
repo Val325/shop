@@ -59,7 +59,7 @@ def auth_jwt(Authorize, access_token_cookie):
 	
 
 	return None
-
+"""
 def return_user(user):
 	with Session(autoflush=False, bind=engine) as db:
 		try:
@@ -69,7 +69,7 @@ def return_user(user):
 		    print("user not finded")
 	print(user)
 	return user
-
+"""
 def set_money_user(user, num_money):
 	with Session(autoflush=False, bind=engine) as db:
 		try:
