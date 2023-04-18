@@ -11,21 +11,19 @@
     <div class="product">
         <div class="mainDescription">
             <div class="images">
-                <p>id:{{id}}</p> 
-                <img src="/static/uploads/{{name_image}}.png" width="130" height="200">
+                <img src="/static/uploads/{{name_image}}.png" width="200" height="300">
             </div>
             <div>
                 <p>описание:{{description}}</p>
             </div>
         </div>
-        <div>
-            
-            <p>цена:{{price}}</p>
-            <form action="/bying/{{id}}" method = "POST" enctype="multipart/form-data">  
+        <div class="byinglabel">
+            <p class="price">${{price}}</p>
+            <form action="/money" method = "POST" enctype="multipart/form-data">  
                 <div class="bying">
                    <input type="submit" class="button-28" value="bying" /><br />
                 </div>
-            </form>   
+            </form> 
         </div>
     </div>
     

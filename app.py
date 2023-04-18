@@ -25,11 +25,15 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-
+from DB import engine, products, users
+from utils import send_all_goods, return_product_by_id
+from utils import auth_jwt, return_user, set_money_user
+import main
 app = FastAPI()
 
 secret_jwt = "4d398bd652db815963be16eb60638b9cc3c70096"
 
+"""
 engine = create_engine("postgresql://postgres:Hamachi2002@localhost/fastapiDB")
 class Base(DeclarativeBase): pass
 
@@ -50,7 +54,14 @@ class users(Base):
     admin = Column(Boolean, unique=False, default=False)
     money = Column(Integer)
 
+
 Base.metadata.create_all(bind=engine)
+"""
+app.include_router(main.router)
+#app.include_router(users.router)
+#app.include_router(users.router)
+#app.include_router(users.router)
+
 app.mount(
     "/static",
     StaticFiles(directory=Path(__file__).parent.absolute() / "static"),
@@ -81,7 +92,7 @@ def authjwt_exception_handler(request: Request,
         content={"detail": exc.message}
     )
 
-
+"""
 def send_all_goods():
 	texts = None
 
@@ -114,9 +125,9 @@ def auth_jwt(Authorize, access_token_cookie):
 	
 
 	return None
-
+"""
 templates = Jinja2Templates(directory="public")
-
+"""
 def return_user(user):
 	with Session(autoflush=False, bind=engine) as db:
 		try:
@@ -144,12 +155,16 @@ async def main(response: Response,
 				request: Request, 
 				access_token_cookie: str | None = Cookie(default=None), 
 				Authorize: AuthJWT = Depends()):
-	
 
+	user_money = None
+	
 	try:
 		texts = send_all_goods()
+
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
+
+		user_money = return_user(isAuth['user']).money
 		if isAuth:
 			auth = True
 	except:
@@ -158,7 +173,8 @@ async def main(response: Response,
 	return templates.TemplateResponse("index.html", {"request": request, 
 														"texts": texts, 
 														"IsAuth": isAuth['user'],
-														"auth": auth})
+														"auth": auth,
+														"money":user_money})
 
 @app.post('/', response_class=HTMLResponse)
 def get_data(request: Request, 
@@ -204,6 +220,8 @@ def get_data(request: Request,
 													"filename": file.filename, 
 													"IsAuth": isAuth['user'],
 													"auth": auth})
+"""
+
 
 @app.get('/login', response_class=HTMLResponse)
 async def login_get(request: Request):
@@ -324,6 +342,9 @@ def product_id_get(request: Request,
 		texts = send_all_goods()
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
+		
+		user = return_user(isAuth["user"])
+		print("are user had money?", user.money)
 		if isAuth:
 			auth = True
 	except:
@@ -339,7 +360,8 @@ def product_id_get(request: Request,
 															"path_image":data_product["path_image"],
 															"price":data_product["price"],
 															"IsAuth": isAuth['user'],
-															"auth": auth})
+															"auth": auth,
+															"money": user.money})
 
 @app.post("/product/{id}")
 def product_id_post(request: Request,
@@ -351,6 +373,9 @@ def product_id_post(request: Request,
 		texts = send_all_goods()
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
+
+		user = return_user(isAuth["user"])
+		print("are user had money?", user.money)
 		if isAuth:
 			auth = True
 	except:
@@ -366,7 +391,8 @@ def product_id_post(request: Request,
 															"path_image":data_product["path_image"],
 															"price":data_product["price"],
 															"IsAuth": isAuth['user'],
-															"auth": auth})
+															"auth": auth,
+															"money": user.money})
 
 #
 # bying product
@@ -381,6 +407,10 @@ def bying_id_get(request: Request,
 		texts = send_all_goods()
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
+
+		user = return_user(isAuth["user"])
+		print("are user had money?", user.money)
+
 		if isAuth:
 			auth = True
 	except:
@@ -399,7 +429,8 @@ def bying_id_get(request: Request,
 															"path_image":data_product["path_image"],
 															"price":data_product["price"],
 															"IsAuth": isAuth['user'],
-															"auth": auth})
+															"auth": auth,
+															"money": user.money})
 
 @app.post("/bying/{id}")
 def bying_id_post(request: Request,
@@ -410,17 +441,17 @@ def bying_id_post(request: Request,
 	print("product", data_product)
 	
 	try:
+
 		texts = send_all_goods()
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
 		user = return_user(isAuth["user"])
 		
 		
-		print("money:", user.money)
-		print("product money:", data_product["price"])
+		
 		moneyAfterBying = user.money - data_product["price"]
-		print("after bying money:", moneyAfterBying)
 		set_money_user(user.user, moneyAfterBying)
+
 		if isAuth:
 			auth = True
 	except:
@@ -439,7 +470,8 @@ def bying_id_post(request: Request,
 													"path_image":data_product["path_image"],
 													"price":data_product["price"],
 													"IsAuth": isAuth['user'],
-													"auth": auth})
+													"auth": auth,
+													"money": user.money})
 
 @app.get("/profile")
 def profile(request: Request, 
@@ -453,6 +485,41 @@ def profile(request: Request,
 		user = return_user(isAuth["user"])
 		print("user:", user.user)
 		print("money:", user.money)
+		if isAuth:
+			auth = True
+	except:
+		return RedirectResponse(url="/login")
+
+
+	return templates.TemplateResponse("profile.html", {"request": request, 
+														"IsAuth": isAuth['user'],
+														"auth": auth,
+														"user": user.user,
+														"money": user.money,
+														"IsAuth": isAuth['user'],
+														"auth": auth})
+
+
+
+@app.post("/profile")
+def profile(request: Request, 
+			access_token_cookie: str | None = Cookie(default=None), 
+			Authorize: AuthJWT = Depends(), 
+			money = Form()):
+
+	try:
+		auth_jwt(Authorize, access_token_cookie)
+		isAuth = json.loads(Authorize.get_jwt_subject())
+		print("userdata", isAuth["user"])
+		user = return_user(isAuth["user"])
+		print("user:", user.user)
+		print("money:", user.money)
+		print("money_set:", money)
+
+		moneyAfterGetMoney = int(user.money) + int(money)
+		set_money_user(user.user, moneyAfterGetMoney)
+
+
 		if isAuth:
 			auth = True
 	except:
