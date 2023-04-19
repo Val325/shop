@@ -25,7 +25,7 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-#from DB import engine, products, users, return_user
+from DB import engine, products, users, return_user
 from utils import send_all_goods, return_product_by_id
 from utils import auth_jwt, set_money_user
 
@@ -34,9 +34,14 @@ import adminPanel
 import productsShop
 import profile
 import registration
-app = FastAPI()
+import logout 
+import categories
 
+app = FastAPI()
 secret_jwt = "4d398bd652db815963be16eb60638b9cc3c70096"
+
+"""
+
 
 
 engine = create_engine("postgresql://postgres:Hamachi2002@localhost/fastapiDB")
@@ -61,12 +66,14 @@ class users(Base):
 
 
 Base.metadata.create_all(bind=engine)
-
+"""
 app.include_router(main.router)
 app.include_router(adminPanel.router)
 app.include_router(productsShop.router)
 app.include_router(profile.router)
 app.include_router(registration.router)
+app.include_router(logout.router)
+app.include_router(categories.router)
 #app.include_router(users.router)
 
 app.mount(
@@ -334,13 +341,15 @@ async def login_post(request: Request,
 		
 	return templates.TemplateResponse("registration.html", {"request": request})
 """
+
+"""
 @app.get('/logout')
 async def logout(response: Response,
 				Authorize: AuthJWT = Depends()):
 	response = RedirectResponse(url="/")
 	Authorize.unset_jwt_cookies(response)
 	return response
-
+"""
 #
 # show product
 #
@@ -486,6 +495,7 @@ def bying_id_post(request: Request,
 													"auth": auth,
 													"money": user.money})
 """
+"""
 @app.get("/profile")
 def profile(request: Request, 
 			access_token_cookie: str | None = Cookie(default=None), 
@@ -546,3 +556,4 @@ def profile(request: Request,
 														"money": user.money,
 														"IsAuth": isAuth['user'],
 														"auth": auth})
+"""

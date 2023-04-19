@@ -25,6 +25,7 @@ body {
 }
 .headerAuth{
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 }
 .headertext {
@@ -33,20 +34,49 @@ body {
 }
 .headerMain {
 	background-color: white;
-	padding: 10px;
+	position: relative;
+	z-index: 3;
 	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; 
 }
+.user, .logout {
+	display: flex;
+	flex-direction: row;
+}
+.categories{
+	display: flex;
+	flex-direction: column;
+}
+.gg-details-more{
+	margin: 0px;
+	padding: 0px;
+	margin-left: 10px;
+	margin-right: 10px;
+	align-self: center;
+}
+a{
+	color: #8d8176;
+	text-decoration: none;
+}
+a:hover{
+	color: #8d8176;
+	text-decoration: none;
+}
+a:visited{
+	color: #8d8176;
+	text-decoration: none;
+}
+a:active{
+	text-decoration: none;
+}
 
-
-
-.headerAuth > div > a,span{
+.headerAuth > div > a,span,i{
   font-size: 32px;
   color: rgb(103, 103, 103);
   text-decoration: none;
   padding: 5px;
 }
 
-.headerAuth > div > a:hover,span:hover{
+.headerAuth > div > a:hover,span:hover, i:hover{
   font-size: 32px;
   color: black;
   text-decoration: none;
@@ -142,4 +172,23 @@ body {
   	padding: 10px;
   	margin: 10px;
   	background-color: white;	
+}
+.byingProfile {
+	width: 200px;
+}
+input[type="number"] {
+	border: 2px solid #1A1A1A;
+  	border-radius: 5px;
+}
+.show {
+	display: flex;
+  	flex-direction: column;	
+	position: absolute;
+	margin: 0px;
+	padding: 0px;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+	background-color: white;
+	width: 500px;
+	height: 100vh;
+	z-index: 2;
 }

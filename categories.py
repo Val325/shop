@@ -32,39 +32,57 @@ from utils import auth_jwt, set_money_user
 templates = Jinja2Templates(directory="public")
 router = APIRouter()
 
-@router.get('/', response_class=HTMLResponse)
-async def main(response: Response,
-				request: Request, 
-				access_token_cookie: str | None = Cookie(default=None), 
+@router.get("/Categories/{category}")
+def get_data(request: Request,
+				category: str, 
+				post: Optional[str] = Form(None), 
+				file: Optional[UploadFile] = File(None),
+				price: Optional[str] = Form(None), 
+				headerProduct: Optional[str] = Form(None),
+				access_token_cookie: str | None = Cookie(default=None),
 				Authorize: AuthJWT = Depends()):
 
-	user_money = None
-	admin_right = None
-	try:
-		texts = send_all_goods()
 
+	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
-
-		user_money = return_user(isAuth['user']).money
-
 		if isAuth:
 			auth = True
-
-		if isAuth["admin_right"]:
-			admin_right = True
 	except:
 		return RedirectResponse(url="/login")
 
-	return templates.TemplateResponse("index.html", {"request": request, 
-														"texts": texts, 
-														"IsAuth": isAuth['user'],
-														"auth": auth,
-														"money":user_money,
-														"admin_right":admin_right})
+	name_image = uuid.uuid1()
+	texts = send_all_goods()
+	
+	#для отправки header auth
+	if (post and price and headerProduct) == None:
+		return templates.TemplateResponse("category.html", {"request": request, 
+															"texts": texts, 
+															"IsAuth": isAuth['user'],
+															"auth": auth,
+															"category":category})
 
-@router.post('/', response_class=HTMLResponse)
-def get_data(request: Request, 
+	with Session(autoflush=False, bind=engine) as db:
+		product = products(description=post,
+							header=headerProduct, 
+							name_image=name_image,
+							path_image="/",
+							price=price)
+		db.add(product)     
+		db.commit()     
+    
+	with open(str(Path(__file__).parent.absolute()) +"/static" + "/uploads/" + str(name_image) +".png", "wb") as buffer:
+		shutil.copyfileobj(file.file, buffer)
+
+	return templates.TemplateResponse("category.html", {"request": request, 
+													"filename": file.filename, 
+													"IsAuth": isAuth['user'],
+													"auth": auth,
+													"category":category})
+
+@router.get("/Categories/{category}")
+def get_data(request: Request,
+				category: str, 
 				post: Optional[str] = Form(None), 
 				file: Optional[UploadFile] = File(None),
 				price: Optional[str] = Form(None), 
@@ -103,7 +121,8 @@ def get_data(request: Request,
 	with open(str(Path(__file__).parent.absolute()) +"/static" + "/uploads/" + str(name_image) +".png", "wb") as buffer:
 		shutil.copyfileobj(file.file, buffer)
 
-	return templates.TemplateResponse("index.html", {"request": request, 
+	return templates.TemplateResponse("category.html", {"request": request, 
 													"filename": file.filename, 
 													"IsAuth": isAuth['user'],
-													"auth": auth})
+													"auth": auth,
+													"category":category})

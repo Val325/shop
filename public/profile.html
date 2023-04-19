@@ -11,10 +11,14 @@
     <div class="profile">
         <h2>user: {{user}}</h2>
         <h2>money: {{money}}</h2>
-        <form action="/profile" method = "POST" enctype="multipart/form-data"> 
-            <input type="number" name="money" class="nameMoney" /> 
+        <form action="/profile" method = "POST" enctype="multipart/form-data">
+            
+            <div class="quantity"> 
+                <input type="number" name="money" class="nameMoney byingProfile" />
+            </div> 
+
             <div class="bying">
-               <input type="submit" class="button-28" value="get money" /><br />
+               <input type="submit" class="button-28 byingProfile" value="get money" /><br />
             </div>
         </form> 
     </div>
