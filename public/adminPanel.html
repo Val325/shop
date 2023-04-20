@@ -7,18 +7,30 @@
 </head>
 <body>
     {% include "header.html" %}
-    <h2>add product</h2>
-    <div class="form_inner">  
+    <h2 class="headertext">add product</h2>
+    <div class="form_inner">
+        <div >  
          <form action="/" method = "POST" enctype="multipart/form-data">  
                <div class="textregion">
-                    <input type="text" name="headerProduct" placeholder="заголовок продукта"><br>
-                    <textarea name="post" rows="10" cols="30" placeholder="описание продукта"></textarea><br />
-                    <input type="number" name="price"  placeholder="цена"/><br />
-                    <input type="file" name="file"><br />
+                    <input type="text" class="adminForm" name="headerProduct" placeholder="заголовок продукта"><br>
+                    <textarea name="post" class="adminForm" rows="10" cols="30" placeholder="описание продукта"></textarea><br />
+
+                    <label for="products">Choose a products:</label>
+
+                    <select id="products" class="adminForm" name="productsCat">
+                      <option value="phones">phones</option>
+                      <option value="pc">pc</option>
+                      <option value="clothes">clothes</option>
+                    </select>
+
+                    <input type="number" class="adminForm" name="price"  placeholder="цена"/><br />
+                    <input type="file" class="adminForm" name="file"><br />
                     <input type = "submit" class="button-28" value="submit" /><br />
                </div>
          </form> 
       </div>
-      <
+    </div>
+    
+      
 </body>
 </html>

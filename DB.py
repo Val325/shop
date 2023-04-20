@@ -36,6 +36,8 @@ class products(Base):
     description = Column(String)
     name_image = Column(String)
     path_image = Column(String)
+    path_url = Column(String)
+    type_product = Column(String)
     price = Column(Integer)
 
 class users(Base):

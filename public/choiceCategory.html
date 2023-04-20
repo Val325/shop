@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>fastapi</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet"  href="{{ url_for('static', path='/styles.css') }}">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/details-more.css' rel='stylesheet'>
+</head>
+<body>
+    {% include "header.html" %}
+    <div class="categoriesShop">
+        <div class="post">
+            <a href="/Categories/phones">phones</a>
+        </div>
+        <div class="post">
+            <a href="/Categories/pc">pc</a>
+        </div>
+        <div class="post">
+            <a href="/Categories/clothes">clothes</a>
+        </div>
+    </div>
+        
+</body>
+
+</html>

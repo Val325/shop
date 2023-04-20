@@ -18,17 +18,9 @@
         </div>
     </div>
     <h2 class="headertext">Shop on fastapi</h2>
-    <!--
-    <div class="form_inner">  
-         <form action="/" method = "POST" enctype="multipart/form-data">  
-               <div class="textregion">
-                  <textarea name="post" rows="10" cols="30"></textarea><br />
-                  <input type="file" name="file"><br />
-                  <input type = "submit" class="button-68" value="submit" /><br />
-               </div>
-         </form> 
-      </div> -->
       <div class="products">
+        
+        
         {% for t in texts %}
             
             <div class="post" onclick="location.href='/product/{{t.id}}';" >
@@ -37,7 +29,7 @@
                     
                     <p>{{t.header}}</p>  
 
-                    <img src="/static/uploads/{{t.name_image}}.png" width="130" height="200">
+                    <img src="/static/uploads/{{t.name_image}}.png" width="160" height="200">
 
                     
                     <p class="price">${{t.price}}</p>

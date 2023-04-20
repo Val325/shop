@@ -27,7 +27,7 @@ from typing import Optional
 import uuid
 from DB import engine, products, users, return_user
 from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, set_money_user
+from utils import auth_jwt, set_money_user, send_filter_goods_type_product
 
 templates = Jinja2Templates(directory="public")
 router = APIRouter()
@@ -41,8 +41,10 @@ def get_data(request: Request,
 				headerProduct: Optional[str] = Form(None),
 				access_token_cookie: str | None = Cookie(default=None),
 				Authorize: AuthJWT = Depends()):
-
-
+	
+	
+	products_filtered = send_filter_goods_type_product(category)
+	
 	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
@@ -60,7 +62,8 @@ def get_data(request: Request,
 															"texts": texts, 
 															"IsAuth": isAuth['user'],
 															"auth": auth,
-															"category":category})
+															"category":category,
+															"products_filtered": products_filtered})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -74,13 +77,16 @@ def get_data(request: Request,
 	with open(str(Path(__file__).parent.absolute()) +"/static" + "/uploads/" + str(name_image) +".png", "wb") as buffer:
 		shutil.copyfileobj(file.file, buffer)
 
+
+
 	return templates.TemplateResponse("category.html", {"request": request, 
 													"filename": file.filename, 
 													"IsAuth": isAuth['user'],
 													"auth": auth,
-													"category":category})
+													"category":category,
+													"products_filtered": products_filtered})
 
-@router.get("/Categories/{category}")
+@router.post("/Categories/{category}")
 def get_data(request: Request,
 				category: str, 
 				post: Optional[str] = Form(None), 

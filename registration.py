@@ -56,4 +56,5 @@ async def login_post(request: Request,
 		db.add(data_user)     
 		db.commit()     
 		
-	return templates.TemplateResponse("registration.html", {"request": request})
+	return RedirectResponse(url="/login")
+	#templates.TemplateResponse("registration.html", {"request": request})

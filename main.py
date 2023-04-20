@@ -54,7 +54,7 @@ async def main(response: Response,
 		if isAuth["admin_right"]:
 			admin_right = True
 	except:
-		return RedirectResponse(url="/login")
+		return RedirectResponse(url="/choice")
 
 	return templates.TemplateResponse("index.html", {"request": request, 
 														"texts": texts, 
@@ -69,17 +69,20 @@ def get_data(request: Request,
 				file: Optional[UploadFile] = File(None),
 				price: Optional[str] = Form(None), 
 				headerProduct: Optional[str] = Form(None),
+				productsCat: Optional[str] = Form(None),
 				access_token_cookie: str | None = Cookie(default=None),
 				Authorize: AuthJWT = Depends()):
-
-
+	
+	type_prod = str(productsCat)
+	path_to_url = "/Categories/" + str(productsCat)
+	print("path_url", path_to_url)
 	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
 		if isAuth:
 			auth = True
 	except:
-		return RedirectResponse(url="/login")
+		return RedirectResponse(url="/choice")
 
 	name_image = uuid.uuid1()
 	texts = send_all_goods()
@@ -96,6 +99,8 @@ def get_data(request: Request,
 							header=headerProduct, 
 							name_image=name_image,
 							path_image="/",
+							path_url=path_to_url,
+							type_product= type_prod,
 							price=price)
 		db.add(product)     
 		db.commit()     

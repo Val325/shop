@@ -47,6 +47,8 @@ async def admin_get(request: Request,
 		if isAuth['admin_right'] == False:
 			return RedirectResponse(url="/")
 
+		user_money = return_user(isAuth['user']).money
+
 		#If user auth?
 		if isAuth:
 			auth = True
@@ -55,4 +57,5 @@ async def admin_get(request: Request,
 
 	return templates.TemplateResponse("adminPanel.html", {"request": request, 
 															"IsAuth": isAuth['user'],
-															"auth": auth})
+															"auth": auth,
+															"money":user_money})

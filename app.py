@@ -108,6 +108,14 @@ def authjwt_exception_handler(request: Request,
     )
 
 
+@app.get("/choice")
+def choice(request: Request):
+	return templates.TemplateResponse("choiceLogOrReg.html", {"request": request})	
+
+@app.get("/Categories")
+def choice(request: Request):
+	return templates.TemplateResponse("choiceCategory.html", {"request": request})	
+
 """
 def send_all_goods():
 	texts = None

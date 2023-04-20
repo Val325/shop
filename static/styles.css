@@ -68,7 +68,10 @@ a:visited{
 a:active{
 	text-decoration: none;
 }
-
+.authreg {
+	font-size: 32px;
+	padding: 5px;
+}
 .headerAuth > div > a,span,i{
   font-size: 32px;
   color: rgb(103, 103, 103);
@@ -88,8 +91,15 @@ a:active{
   color: black;
   text-decoration: none;
 }
-
-
+.form_inner {
+	justify-content: center;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+.adminForm {
+	
+	margin-bottom: 5px;
+}
 
 .form_inner, .post, .login, .registration{
 	cursor: pointer;
@@ -182,7 +192,7 @@ input[type="number"] {
 }
 .show {
 	display: flex;
-  	flex-direction: column;	
+  flex-direction: column;	
 	position: absolute;
 	margin: 0px;
 	padding: 0px;
@@ -191,4 +201,38 @@ input[type="number"] {
 	width: 500px;
 	height: 100vh;
 	z-index: 2;
+}
+.categories {
+	margin-left: 20px;
+}
+.show > h1{
+	margin-left: 30px;
+
+}
+.categories > a{
+
+	margin-bottom: 20px;
+}
+.categoriesShop, .choices {
+	font-size: 40px;
+	height: 200px;
+	display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+	flex-direction: row;
+	justify-content: space-around;
+}
+.categoriesShop, .choices > div {
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+.choicesRegLog {
+	margin-top: 30px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+.descriptionProduct{
+	margin-left: 20px;
 }

@@ -80,3 +80,11 @@ def set_money_user(user, num_money):
 		    print("user not finded")
 	print(user)
 	return user
+
+def send_filter_goods_type_product(type_product):
+	texts = None
+
+	with Session(autoflush=False, bind=engine) as db:
+		texts = db.query(products).filter(products.type_product == type_product)
+
+	return texts	
