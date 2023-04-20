@@ -56,8 +56,7 @@ def profile(request: Request,
 														"auth": auth,
 														"user": user.user,
 														"money": user.money,
-														"IsAuth": isAuth['user'],
-														"auth": auth})
+														"admin_right":isAuth['admin_right']})
 
 
 

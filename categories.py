@@ -48,6 +48,7 @@ def get_data(request: Request,
 	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
+		user_money = return_user(isAuth['user']).money
 		if isAuth:
 			auth = True
 	except:
@@ -63,7 +64,9 @@ def get_data(request: Request,
 															"IsAuth": isAuth['user'],
 															"auth": auth,
 															"category":category,
-															"products_filtered": products_filtered})
+															"products_filtered": products_filtered,
+															"admin_right":isAuth['admin_right'],
+															"money":user_money})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -84,7 +87,9 @@ def get_data(request: Request,
 													"IsAuth": isAuth['user'],
 													"auth": auth,
 													"category":category,
-													"products_filtered": products_filtered})
+													"products_filtered": products_filtered,
+													"admin_right":isAuth['admin_right'],
+													"money":user_money})
 
 @router.post("/Categories/{category}")
 def get_data(request: Request,
@@ -100,6 +105,7 @@ def get_data(request: Request,
 	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
+		user_money = return_user(isAuth['user']).money
 		if isAuth:
 			auth = True
 	except:
@@ -113,7 +119,9 @@ def get_data(request: Request,
 		return templates.TemplateResponse("index.html", {"request": request, 
 															"texts": texts, 
 															"IsAuth": isAuth['user'],
-															"auth": auth})
+															"auth": auth,
+															"admin_right":isAuth['admin_right'],
+															"money":user_money})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -131,4 +139,6 @@ def get_data(request: Request,
 													"filename": file.filename, 
 													"IsAuth": isAuth['user'],
 													"auth": auth,
-													"category":category})
+													"category":category,
+													"admin_right":isAuth['admin_right'],
+													"money":user_money})

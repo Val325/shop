@@ -58,4 +58,5 @@ async def admin_get(request: Request,
 	return templates.TemplateResponse("adminPanel.html", {"request": request, 
 															"IsAuth": isAuth['user'],
 															"auth": auth,
-															"money":user_money})
+															"money":user_money,
+															"admin_right":isAuth['admin_right']})

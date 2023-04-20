@@ -47,8 +47,11 @@ async def login_post(request: Request,
 
 	isNotValidated = validation_registration(Password)
 
-	if isNotValidated:
-		return RedirectResponse('/registration', 303)
+
+	#If password is less then 6 symbols and if return_user return use you get a error
+	if isNotValidated or (return_user(Username) != None):
+		return templates.TemplateResponse("registration.html", {"request": request,
+																"isNotValidated":isNotValidated})
 
 	salt = bcrypt.gensalt()
 	hashed = bcrypt.hashpw(Password.encode('utf-8'), salt).decode('utf8')
@@ -62,4 +65,4 @@ async def login_post(request: Request,
 		db.commit()     
 		
 	return RedirectResponse(url="/login")
-	#templates.TemplateResponse("registration.html", {"request": request})
+	#

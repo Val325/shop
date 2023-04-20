@@ -5,26 +5,61 @@
 <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
 <link href='https://unpkg.com/css.gg@2.0.0/icons/css/details-more.css' rel='stylesheet'>  
 </head>
+<style>
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+}
 
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: black;
+}
+</style>
 
 <html>  
    <body>
+
+   
+
    <div class="registration">
+   {% if isNotValidated %} 
+      <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+        <strong>Danger!</strong> Вы неправильно что-то ввели, попробуйте ещё раз. Либо логин недоступен, либо у символов пароля недостаточно
+      </div> 
+   {% endif %}
       <div>
       <form action="/registration" method = "POST">
         <div class="registration_form">
           <h1>Register</h1>
           
           <hr>
-        
-          <label for="user"><b>Username</b></label>
-          <input type="text" placeholder="Enter Username" name="Username" id="user" required><br>
-        
-          <label for="password"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="Password" id="password" required><br>
+         <div>
+            <label for="user" class="label_reg"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="Username" class="button_reg" id="user" required><br>
+         </div>
+          
+
+         <div>
+            <label for="password" class="label_reg"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="Password" class="button_reg" id="password" required><br>
+         </div>
+          
     
 
-          <button type="submit" class="registerbtn button-68">Register</button>
+          <button type="submit" class="registerbtn button-28">Register</button>
         </div>
       </div>  
    </div>
