@@ -25,9 +25,9 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-from DB import engine, products, users, return_user
+from DB import engine, products, users
 from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, set_money_user
+from utils import auth_jwt, set_money_user, return_user
 import main
 
 templates = Jinja2Templates(directory="public")

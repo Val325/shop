@@ -25,9 +25,9 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-from DB import engine, products, users, return_user
+from DB import engine, products, users
 from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, set_money_user
+from utils import auth_jwt, set_money_user, return_user
 
 templates = Jinja2Templates(directory="public")
 router = APIRouter()
@@ -73,16 +73,20 @@ def get_data(request: Request,
 				access_token_cookie: str | None = Cookie(default=None),
 				Authorize: AuthJWT = Depends()):
 	
+
+
 	type_prod = str(productsCat)
 	path_to_url = "/Categories/" + str(productsCat)
 	print("path_url", path_to_url)
-	try:
-		auth_jwt(Authorize, access_token_cookie)
-		isAuth = json.loads(Authorize.get_jwt_subject())
-		if isAuth:
-			auth = True
-	except:
-		return RedirectResponse(url="/choice")
+	#try:
+	auth_jwt(Authorize, access_token_cookie)
+	isAuth = json.loads(Authorize.get_jwt_subject())
+	user_money = return_user(isAuth['user']).money
+	admin_right = isAuth['admin_right']
+	if isAuth:
+		auth = True
+	#except:
+	#	return RedirectResponse(url="/choice")
 
 	name_image = uuid.uuid1()
 	texts = send_all_goods()
@@ -92,7 +96,9 @@ def get_data(request: Request,
 		return templates.TemplateResponse("index.html", {"request": request, 
 															"texts": texts, 
 															"IsAuth": isAuth['user'],
-															"auth": auth})
+															"auth": auth,
+															"money":user_money,
+															"admin_right":admin_right})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -111,4 +117,6 @@ def get_data(request: Request,
 	return templates.TemplateResponse("index.html", {"request": request, 
 													"filename": file.filename, 
 													"IsAuth": isAuth['user'],
-													"auth": auth})
+													"auth": auth,
+													"money":user_money,
+													"admin_right":admin_right})

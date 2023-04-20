@@ -50,12 +50,3 @@ class users(Base):
 
 Base.metadata.create_all(bind=engine)
 
-def return_user(user):
-    with Session(autoflush=False, bind=engine) as db:
-        try:
-            user = db.query(users).filter(users.user==user).one_or_none()
-
-        except AttributeError:
-            print("user not finded")
-    print(user)
-    return user

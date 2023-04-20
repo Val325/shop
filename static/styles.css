@@ -100,6 +100,12 @@ a:active{
 	
 	margin-bottom: 5px;
 }
+.registration, .login{
+	position  : absolute;
+  top       : 50%;
+  left      : 50%;
+  transform : translate(-50%, -50%);
+}
 
 .form_inner, .post, .login, .registration{
 	cursor: pointer;

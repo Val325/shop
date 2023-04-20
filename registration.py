@@ -25,9 +25,9 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-from DB import engine, products, users, return_user
+from DB import engine, products, users
 from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, set_money_user
+from utils import auth_jwt, set_money_user, return_user, validation_registration
 import main
 
 templates = Jinja2Templates(directory="public")
@@ -44,6 +44,11 @@ async def login_post(request: Request,
 	print("Password")
 	print("Username:", Username)
 	print("Password:", Password)
+
+	isNotValidated = validation_registration(Password)
+
+	if isNotValidated:
+		return RedirectResponse('/registration', 303)
 
 	salt = bcrypt.gensalt()
 	hashed = bcrypt.hashpw(Password.encode('utf-8'), salt).decode('utf8')

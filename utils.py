@@ -59,7 +59,7 @@ def auth_jwt(Authorize, access_token_cookie):
 	
 
 	return None
-"""
+
 def return_user(user):
 	with Session(autoflush=False, bind=engine) as db:
 		try:
@@ -69,7 +69,7 @@ def return_user(user):
 		    print("user not finded")
 	print(user)
 	return user
-"""
+
 def set_money_user(user, num_money):
 	with Session(autoflush=False, bind=engine) as db:
 		try:
@@ -87,4 +87,12 @@ def send_filter_goods_type_product(type_product):
 	with Session(autoflush=False, bind=engine) as db:
 		texts = db.query(products).filter(products.type_product == type_product)
 
-	return texts	
+	return texts
+
+def validation_registration(symbols):
+	if len(symbols) < 7:
+		print("Пароль должен быть больше 6ти символов")
+		return True
+	else:
+		print("Пароль правильный")
+		return False

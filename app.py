@@ -25,9 +25,9 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-from DB import engine, products, users, return_user
+from DB import engine, products, users
 from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, set_money_user
+from utils import auth_jwt, set_money_user, return_user
 
 import main
 import adminPanel
@@ -113,6 +113,14 @@ def choice(request: Request):
 	return templates.TemplateResponse("choiceLogOrReg.html", {"request": request})	
 
 @app.get("/Categories")
+def choice(request: Request):
+	return templates.TemplateResponse("choiceCategory.html", {"request": request})	
+
+@app.post("/choice")
+def choice(request: Request):
+	return templates.TemplateResponse("choiceLogOrReg.html", {"request": request})	
+
+@app.post("/Categories")
 def choice(request: Request):
 	return templates.TemplateResponse("choiceCategory.html", {"request": request})	
 
@@ -295,6 +303,10 @@ async def login_post(request: Request,
 		try:
 			userDB = db.query(users).filter(users.user==Username).one_or_none()
 			print(f"{userDB.id}.{userDB.user} ({userDB.password})")
+
+			
+
+			print("money user", userDB.money)
 
 			data_jwt_save = json.dumps({"user":userDB.user, "admin_right":userDB.admin})
 			
