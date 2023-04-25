@@ -38,6 +38,7 @@ import logout
 import categories
 import login
 import choice
+import api
 
 app = FastAPI()
 secret_jwt = "4d398bd652db815963be16eb60638b9cc3c70096"
@@ -51,6 +52,8 @@ app.include_router(logout.router)
 app.include_router(categories.router)
 app.include_router(login.router)
 app.include_router(choice.router)
+app.include_router(api.router)
+
 
 app.mount(
     "/static",

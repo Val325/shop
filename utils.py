@@ -33,7 +33,45 @@ def send_all_goods():
 	with Session(autoflush=False, bind=engine) as db:
 		texts = db.query(products).all()
 
-	return texts	
+	return texts
+
+def send_all_users():
+	total_users = []
+	users_array = []
+	users_id = []
+
+	with Session(autoflush=False, bind=engine) as db:
+		users_all = db.query(users).all()
+		for data_user in users_all:
+			users_array.append(data_user.user)
+			users_id.append(data_user.id)
+
+			total_users.append({"id": int(data_user.id),
+							"user": str(data_user.user)})
+
+	
+	return total_users
+
+
+def return_user_by_id(id):
+	with Session(autoflush=False, bind=engine) as db:
+		try:
+			user = db.query(users).filter(users.id==id).one_or_none()
+			return {'id':user.id,'user': user.user}
+		except AttributeError:
+		    return {'error': 'user not found'}
+
+def return_user_by_user(user):
+	with Session(autoflush=False, bind=engine) as db:
+		
+		try:
+		
+			user = db.query(users).filter(users.user==user).one_or_none()
+			return {'id':user.id,'user': user.user}
+		
+		except AttributeError:
+		    return {'error': 'user not found'}
+		
 
 #Return product by id
 def return_product_by_id(id):
@@ -89,10 +127,15 @@ def send_filter_goods_type_product(type_product):
 
 	return texts
 
-def validation_registration(symbols):
+def validation_registration(symbols, user):
+
+
 	if len(symbols) < 7:
 		print("Пароль должен быть больше 6ти символов")
 		return True
 	else:
 		print("Пароль правильный")
 		return False
+
+def is_user_exists(user):
+	pass
