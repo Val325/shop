@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse, Response
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.responses import RedirectResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, ForeignKey, ARRAY
 from sqlalchemy import  Column, Integer, String, Boolean
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
@@ -47,6 +47,19 @@ class users(Base):
     password = Column(String)
     admin = Column(Boolean, unique=False, default=False)
     money = Column(Integer)
+
+class basketUsers(Base):
+    __tablename__ = "baskets"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey(users.id))
+    header = Column(ARRAY(String()), default=[])
+    description = Column(ARRAY(String()), default=[])
+    name_image = Column(ARRAY(String()), default=[])
+    path_image = Column(ARRAY(String()), default=[])
+    path_url = Column(ARRAY(String()), default=[])
+    type_product = Column(ARRAY(String()), default=[])
+    price = Column(ARRAY(String()), default=[])
+
 
 Base.metadata.create_all(bind=engine)
 

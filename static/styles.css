@@ -255,3 +255,8 @@ input[type="number"] {
 .descriptionProduct{
 	margin-left: 20px;
 }
+.gg-shopping-cart {
+  transform: scale(var(--ggs,1.4)) !important;
+  align-self: center;
+  margin-left: 10px;
+}

@@ -127,7 +127,7 @@ def send_filter_goods_type_product(type_product):
 
 	return texts
 
-def validation_registration(symbols, user):
+def validation_registration(symbols):
 
 
 	if len(symbols) < 7:

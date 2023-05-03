@@ -141,22 +141,33 @@ def bying_id_post(request: Request,
 	data_product = return_product_by_id(id)
 	print("product", data_product)
 	
-	try:
+	#try:
 
-		texts = send_all_goods()
-		auth_jwt(Authorize, access_token_cookie)
-		isAuth = json.loads(Authorize.get_jwt_subject())
-		user = return_user(isAuth["user"])
+	texts = send_all_goods()
+	auth_jwt(Authorize, access_token_cookie)
+	isAuth = json.loads(Authorize.get_jwt_subject())
+	user = return_user(isAuth["user"])
 		
 		
 		
-		moneyAfterBying = user.money - data_product["price"]
-		set_money_user(user.user, moneyAfterBying)
+	moneyAfterBying = user.money - data_product["price"]
+	set_money_user(user.user, moneyAfterBying)
 
-		if isAuth:
-			auth = True
-	except:
-		return RedirectResponse(url="/login")
+	if moneyAfterBying < 0:
+		moneyAfterBying = 0
+		return templates.TemplateResponse("fail.html", {"request": request,
+													"id":data_product["id"],
+													"header":data_product["header"],
+													"description":data_product["description"],
+													"name_image":data_product["name_image"],
+													"path_image":data_product["path_image"],
+													"price":data_product["price"],
+													"money": user.money})
+
+	if isAuth:
+		auth = True
+	#except:
+	#	return RedirectResponse(url="/login")
 
 	
 
