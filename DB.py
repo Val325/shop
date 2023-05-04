@@ -52,11 +52,11 @@ class basketUsers(Base):
     __tablename__ = "baskets"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey(users.id))
-    header = Column(ARRAY(String()), default=[])
-    description = Column(ARRAY(String()), default=[])
-    name_image = Column(ARRAY(String()), default=[])
-    path_image = Column(ARRAY(String()), default=[])
-    price = Column(ARRAY(String()), default=[])
+    header = Column(String)
+    description = Column(String)
+    name_image = Column(String)
+    path_image = Column(String)
+    price = Column(Integer)
 
 
 Base.metadata.create_all(bind=engine)

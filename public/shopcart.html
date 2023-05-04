@@ -11,6 +11,9 @@
 <body>
     {% include "header.html" %}
     <div>
-        
+        {% for item in cart %}
+            <p> id:{{item.id}} header:{{item.header}} price:{{item.price}}</p>
+        {% endfor %}
+        <input type="submit" class="button-28" value="bying" onclick="window.location.href = '/byingcart'" /><br />
     </div>
 </body>

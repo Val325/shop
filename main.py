@@ -26,7 +26,7 @@ import time
 from typing import Optional
 import uuid
 from DB import engine, products, users
-from utils import send_all_goods, return_product_by_id
+from utils import send_all_goods, return_product_by_id, count_cart
 from utils import auth_jwt, set_money_user, return_user
 
 templates = Jinja2Templates(directory="public")
@@ -46,8 +46,9 @@ async def main(response: Response,
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
 
-		user_money = return_user(isAuth['user']).money
-
+		user = return_user(isAuth['user'])
+		user_money = user.money
+		amount_court = count_cart(user.id)
 		if isAuth:
 			auth = True
 
@@ -61,7 +62,8 @@ async def main(response: Response,
 														"IsAuth": isAuth['user'],
 														"auth": auth,
 														"money":user_money,
-														"admin_right":admin_right})
+														"admin_right":admin_right,
+														"count_cart":amount_court})
 
 @router.post('/', response_class=HTMLResponse)
 def get_data(request: Request, 

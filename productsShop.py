@@ -26,8 +26,8 @@ import time
 from typing import Optional
 import uuid
 from DB import engine, products, users
-from utils import send_all_goods, return_product_by_id
-from utils import auth_jwt, set_money_user, return_user
+from utils import send_all_goods, return_product_by_id, add_to_cart
+from utils import auth_jwt, set_money_user, return_user, get_cart, delete_cart
 import main
 
 templates = Jinja2Templates(directory="public")
@@ -141,22 +141,32 @@ def bying_id_post(request: Request,
 	data_product = return_product_by_id(id)
 	print("product", data_product)
 	
-	try:
+	#try:
 
-		texts = send_all_goods()
-		auth_jwt(Authorize, access_token_cookie)
-		isAuth = json.loads(Authorize.get_jwt_subject())
-		user = return_user(isAuth["user"])
+	texts = send_all_goods()
+	auth_jwt(Authorize, access_token_cookie)
+	isAuth = json.loads(Authorize.get_jwt_subject())
 		
-		
-		
-		moneyAfterBying = user.money - data_product["price"]
+	user = return_user(isAuth["user"])
+	user_id = user.id
+	print("userid:", user_id)
+
+	data_cart = {
+				"header":data_product['header'],
+    			"description":data_product["description"],
+    			"name_image":data_product["name_image"],
+    			"path_image":data_product["path_image"],
+    			"price":data_product["price"]
+	}
+
+	add_to_cart(user_id, data_cart)
+	moneyAfterBying = user.money - data_product["price"]
+	#set_money_user(user.user, moneyAfterBying)
+
+	if moneyAfterBying < 0:
+		moneyAfterBying = 0
 		set_money_user(user.user, moneyAfterBying)
-
-		if moneyAfterBying < 0:
-			moneyAfterBying = 0
-			set_money_user(user.user, moneyAfterBying)
-			return templates.TemplateResponse("fail.html", {"request": request,
+		return templates.TemplateResponse("fail.html", {"request": request,
 													"id":data_product["id"],
 													"header":data_product["header"],
 													"description":data_product["description"],
@@ -165,10 +175,10 @@ def bying_id_post(request: Request,
 													"price":data_product["price"],
 													"money": user.money})
 
-		if isAuth:
-			auth = True
-	except:
-		return RedirectResponse(url="/login")
+	if isAuth:
+		auth = True
+	#except:
+	#	return RedirectResponse(url="/login")
 
 	
 
@@ -182,6 +192,64 @@ def bying_id_post(request: Request,
 													"name_image":data_product["name_image"],
 													"path_image":data_product["path_image"],
 													"price":data_product["price"],
+													"IsAuth": isAuth['user'],
+													"auth": auth,
+													"money": user.money})
+
+
+@router.get("/byingcart")
+def bying_id_post(request: Request,
+					access_token_cookie: str | None = Cookie(default=None), 
+					Authorize: AuthJWT = Depends()):
+	total_price = 0
+
+	#try:
+
+	auth_jwt(Authorize, access_token_cookie)
+	isAuth = json.loads(Authorize.get_jwt_subject())
+		
+	user = return_user(isAuth["user"])
+	user_id = user.id
+	print("userid:", user_id)
+
+	
+	"""
+	moneyAfterBying = user.money - data_product["price"]
+	set_money_user(user.user, moneyAfterBying)
+	"""
+
+
+	cart = get_cart(user_id)
+
+	for item in cart:
+		total_price += item.price
+
+	moneyAfterBying = user.money - total_price
+
+	if moneyAfterBying < 0:
+		moneyAfterBying = 0
+		set_money_user(user.user, moneyAfterBying)
+		return templates.TemplateResponse("fail.html", {"request": request,
+														"money": user.money})
+	set_money_user(user.user, moneyAfterBying)
+
+	
+
+	
+
+	delete_cart(user_id)	
+
+	if isAuth:
+		auth = True
+	#except:
+	#	return RedirectResponse(url="/login")
+
+	
+
+	
+
+
+	return templates.TemplateResponse("bying.html", {"request": request,
 													"IsAuth": isAuth['user'],
 													"auth": auth,
 													"money": user.money})

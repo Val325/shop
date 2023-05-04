@@ -145,11 +145,11 @@ def add_to_cart(user, data):
 	with Session(autoflush=False, bind=engine) as db:
 		
 		data_user = basketUsers(user_id=user,
-    							header=header.append(data.header),
-    							description=description.append(data.description),
-    							name_image=name_image.append(data.name_image),
-    							path_image=path_image.append(data.path_image),
-    							price=price.append(data.price))
+    							header=data['header'],
+    							description=data['description'],
+    							name_image=data['name_image'],
+    							path_image=data['path_image'],
+    							price=data['price'])
 		db.add(data_user)     
 		db.commit()
 
@@ -157,8 +157,28 @@ def add_to_cart(user, data):
 def get_cart(id_user):
 	with Session(autoflush=False, bind=engine) as db:
 		try:
-			basket = db.query(basketUsers).filter(basketUsers.user_id==id_user).one_or_none()
-
+			basket = db.query(basketUsers).filter(basketUsers.user_id==id_user).all()
 		except AttributeError:
 		    print("basket not finded")
+
 	return basket
+
+def delete_cart(id_user):
+	with Session(autoflush=False, bind=engine) as db:
+		try:
+			basket = db.query(basketUsers).filter(basketUsers.user_id==id_user).delete()
+			db.commit()
+		except AttributeError:
+		    print("basket not finded and not deleted")
+
+	return basket
+
+
+def count_cart(id_user):
+	with Session(autoflush=False, bind=engine) as db:
+		try:
+			items = db.query(basketUsers).filter(basketUsers.user_id==id_user).count()
+		except AttributeError:
+		    print("basket not finded and not deleted")
+
+	return items
