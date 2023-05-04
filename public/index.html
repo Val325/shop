@@ -60,6 +60,7 @@
 
     //If user click to icon
     let showCategories = document.querySelector(".gg-details-more");
+    let shopcart = document.querySelector(".gg-shopping-cart");
     //toggle window
     let show = document.querySelector(".show");
     show.style.display = "none"
@@ -77,5 +78,9 @@
         }
         
     });
+
+    shopcart.addEventListener("click", function(){
+        window.location.replace("/shopcart");
+    })
 </script>
 </html>

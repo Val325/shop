@@ -25,7 +25,7 @@ from pydantic import BaseModel
 import time
 from typing import Optional
 import uuid
-from DB import engine, products, users
+from DB import engine, products, users, basketUsers
 
 def send_all_goods():
 	texts = None
@@ -131,11 +131,34 @@ def validation_registration(symbols):
 
 
 	if len(symbols) < 7:
-		print("Пароль должен быть больше 6ти символов")
+		print("Password bigger then 7 symbols")
 		return True
 	else:
-		print("Пароль правильный")
+		print("Password correct")
 		return False
 
 def is_user_exists(user):
 	pass
+
+
+def add_to_cart(user, data):
+	with Session(autoflush=False, bind=engine) as db:
+		
+		data_user = basketUsers(user_id=user,
+    							header=header.append(data.header),
+    							description=description.append(data.description),
+    							name_image=name_image.append(data.name_image),
+    							path_image=path_image.append(data.path_image),
+    							price=price.append(data.price))
+		db.add(data_user)     
+		db.commit()
+
+
+def get_cart(id_user):
+	with Session(autoflush=False, bind=engine) as db:
+		try:
+			basket = db.query(basketUsers).filter(basketUsers.user_id==id_user).one_or_none()
+
+		except AttributeError:
+		    print("basket not finded")
+	return basket

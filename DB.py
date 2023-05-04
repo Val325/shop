@@ -56,8 +56,6 @@ class basketUsers(Base):
     description = Column(ARRAY(String()), default=[])
     name_image = Column(ARRAY(String()), default=[])
     path_image = Column(ARRAY(String()), default=[])
-    path_url = Column(ARRAY(String()), default=[])
-    type_product = Column(ARRAY(String()), default=[])
     price = Column(ARRAY(String()), default=[])
 
 
