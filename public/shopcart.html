@@ -10,10 +10,15 @@
 </head>
 <body>
     {% include "header.html" %}
+    {% if cart %} 
     <div>
         {% for item in cart %}
             <p> id:{{item.id}} header:{{item.header}} price:{{item.price}}</p>
         {% endfor %}
         <input type="submit" class="button-28" value="bying" onclick="window.location.href = '/byingcart'" /><br />
     </div>
+    {% endif %}
 </body>
+<script type="text/javascript" src="{{ url_for('static', path='/clickcourt.js') }}"></script>
+</html>
+

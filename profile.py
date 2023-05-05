@@ -26,7 +26,7 @@ import time
 from typing import Optional
 import uuid
 from DB import engine, products, users
-from utils import send_all_goods, return_product_by_id
+from utils import send_all_goods, return_product_by_id, count_cart
 from utils import auth_jwt, set_money_user, return_user
 import main
 
@@ -43,6 +43,9 @@ def profile(request: Request,
 		isAuth = json.loads(Authorize.get_jwt_subject())
 		print("userdata", isAuth["user"])
 		user = return_user(isAuth["user"])
+		print("are user had money?", user.money)
+
+		amount_court = count_cart(user.id)
 		print("user:", user.user)
 		print("money:", user.money)
 		if isAuth:
@@ -56,7 +59,8 @@ def profile(request: Request,
 														"auth": auth,
 														"user": user.user,
 														"money": user.money,
-														"admin_right":isAuth['admin_right']})
+														"admin_right":isAuth['admin_right'],
+														"count_cart":amount_court})
 
 
 
@@ -71,6 +75,9 @@ def profile(request: Request,
 		isAuth = json.loads(Authorize.get_jwt_subject())
 		print("userdata", isAuth["user"])
 		user = return_user(isAuth["user"])
+		print("are user had money?", user.money)
+
+		amount_court = count_cart(user.id)
 		print("user:", user.user)
 		print("money:", user.money)
 		print("money_set:", money)
@@ -91,4 +98,5 @@ def profile(request: Request,
 														"user": user.user,
 														"money": user.money,
 														"IsAuth": isAuth['user'],
-														"auth": auth})
+														"auth": auth,
+														"count_cart":amount_court})

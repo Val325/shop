@@ -26,7 +26,7 @@ import time
 from typing import Optional
 import uuid
 from DB import engine, products, users
-from utils import send_all_goods, return_product_by_id
+from utils import send_all_goods, return_product_by_id, count_cart
 from utils import auth_jwt, set_money_user, return_user
 import main
 
@@ -43,20 +43,25 @@ async def admin_get(request: Request,
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
 
+
 		#If user had admin right?
 		if isAuth['admin_right'] == False:
 			return RedirectResponse(url="/")
-
-		user_money = return_user(isAuth['user']).money
+		user = return_user(isAuth['user'])
+		user_money = user.money
+		
+		user_money = user.money
 
 		#If user auth?
 		if isAuth:
 			auth = True
-	except:
+	except Exception as e:
+		print('error: ',e)
 		return RedirectResponse(url="/login")
-
+	amount_court = count_cart(user.id)
 	return templates.TemplateResponse("adminPanel.html", {"request": request, 
 															"IsAuth": isAuth['user'],
 															"auth": auth,
 															"money":user_money,
-															"admin_right":isAuth['admin_right']})
+															"admin_right":isAuth['admin_right'],
+															"count_cart": amount_court})

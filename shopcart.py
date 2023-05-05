@@ -27,7 +27,7 @@ from typing import Optional
 import uuid
 from DB import engine, products, users
 from utils import send_all_goods, return_product_by_id, get_cart
-from utils import auth_jwt, set_money_user, return_user
+from utils import auth_jwt, set_money_user, return_user, count_cart
 
 templates = Jinja2Templates(directory="public")
 router = APIRouter()
@@ -47,24 +47,19 @@ async def main(response: Response,
 
 	user = return_user(isAuth['user'])
 	user_money = user.money
-
+	cart = get_cart(user.id)
+	amount_court = count_cart(user.id)
 	if isAuth:
 		auth = True
 
 	if isAuth["admin_right"]:
 		admin_right = True
 	
-	print('cart', get_cart(user.id))
-
-	cart = get_cart(user.id)
-
-	for item in cart:
-		print('id:', item.id)
-		print('header:', item.header)
 
 	return templates.TemplateResponse("shopcart.html", {"request": request,
 														"IsAuth": isAuth['user'],
 														"auth": auth,
 														"money":user_money,
 														"admin_right":admin_right,
-														"cart": cart})
+														"cart": cart,
+														"count_cart":amount_court})

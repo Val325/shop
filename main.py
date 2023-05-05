@@ -83,8 +83,11 @@ def get_data(request: Request,
 	#try:
 	auth_jwt(Authorize, access_token_cookie)
 	isAuth = json.loads(Authorize.get_jwt_subject())
-	user_money = return_user(isAuth['user']).money
+	
 	admin_right = isAuth['admin_right']
+	user = return_user(isAuth['user'])
+	user_money = user.money
+	amount_court = count_cart(user.id)
 	if isAuth:
 		auth = True
 	#except:
@@ -100,7 +103,8 @@ def get_data(request: Request,
 															"IsAuth": isAuth['user'],
 															"auth": auth,
 															"money":user_money,
-															"admin_right":admin_right})
+															"admin_right":admin_right,
+															"count_cart":amount_court})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -121,4 +125,5 @@ def get_data(request: Request,
 													"IsAuth": isAuth['user'],
 													"auth": auth,
 													"money":user_money,
-													"admin_right":admin_right})
+													"admin_right":admin_right,
+													"count_cart":amount_court})

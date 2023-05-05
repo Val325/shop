@@ -26,7 +26,7 @@ import time
 from typing import Optional
 import uuid
 from DB import engine, products, users
-from utils import send_all_goods, return_product_by_id
+from utils import send_all_goods, return_product_by_id, get_cart, count_cart
 from utils import auth_jwt, set_money_user, send_filter_goods_type_product, return_user
 
 templates = Jinja2Templates(directory="public")
@@ -48,7 +48,11 @@ def get_data(request: Request,
 	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
-		user_money = return_user(isAuth['user']).money
+		user = return_user(isAuth['user'])
+		user_money = user.money
+		amount_court = count_cart(user.id)
+
+		print('amount_court:', amount_court)
 		if isAuth:
 			auth = True
 	except:
@@ -66,7 +70,8 @@ def get_data(request: Request,
 															"category":category,
 															"products_filtered": products_filtered,
 															"admin_right":isAuth['admin_right'],
-															"money":user_money})
+															"money":user_money,
+															"count_cart": amount_court})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -81,7 +86,7 @@ def get_data(request: Request,
 		shutil.copyfileobj(file.file, buffer)
 
 
-
+	
 	return templates.TemplateResponse("category.html", {"request": request, 
 													"filename": file.filename, 
 													"IsAuth": isAuth['user'],
@@ -89,7 +94,8 @@ def get_data(request: Request,
 													"category":category,
 													"products_filtered": products_filtered,
 													"admin_right":isAuth['admin_right'],
-													"money":user_money})
+													"money":user_money,
+													"count_cart": amount_court})
 
 @router.post("/Categories/{category}")
 def get_data(request: Request,
@@ -105,7 +111,11 @@ def get_data(request: Request,
 	try:
 		auth_jwt(Authorize, access_token_cookie)
 		isAuth = json.loads(Authorize.get_jwt_subject())
-		user_money = return_user(isAuth['user']).money
+		user = return_user(isAuth['user'])
+		user_money = user.money
+		amount_court = count_cart(user.id)
+
+		print('amount_court:', amount_court)
 		if isAuth:
 			auth = True
 	except:
@@ -121,7 +131,8 @@ def get_data(request: Request,
 															"IsAuth": isAuth['user'],
 															"auth": auth,
 															"admin_right":isAuth['admin_right'],
-															"money":user_money})
+															"money":user_money,
+															"count_cart": amount_court})
 
 	with Session(autoflush=False, bind=engine) as db:
 		product = products(description=post,
@@ -141,4 +152,5 @@ def get_data(request: Request,
 													"auth": auth,
 													"category":category,
 													"admin_right":isAuth['admin_right'],
-													"money":user_money})
+													"money":user_money,
+													"count_cart": amount_court})
